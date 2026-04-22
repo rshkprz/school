@@ -1,0 +1,36 @@
+{
+  "name": "school",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "check-types": "turbo check-types",
+    "dev:web": "turbo -F web dev",
+    "dev:server": "turbo -F server dev",
+    "db:push": "turbo -F @school/db db:push",
+    "db:studio": "turbo -F @school/db db:studio",
+    "db:generate": "turbo -F @school/db db:generate",
+    "db:migrate": "turbo -F @school/db db:migrate",
+    "db:start": "turbo -F @school/db db:start",
+    "db:watch": "turbo -F @school/db db:watch",
+    "db:stop": "turbo -F @school/db db:stop",
+    "db:down": "turbo -F @school/db db:down"
+  },
+  "dependencies": {
+    "@school/env": "workspace:*",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@school/config": "workspace:*",
+    "@types/node": "catalog:",
+    "turbo": "^2.8.12",
+    "typescript": "catalog:"
+  },
+  "packageManager": "pnpm@10.15.1"
+}

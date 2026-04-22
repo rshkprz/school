@@ -1,0 +1,24 @@
+{
+  "name": "@school/auth",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@school/db": "workspace:*",
+    "@school/env": "workspace:*",
+    "better-auth": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@school/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}
