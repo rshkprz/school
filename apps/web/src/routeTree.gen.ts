@@ -9,18 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as protectedRouteRouteImport } from './routes/(protected)/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as protectedStudentsRouteImport } from './routes/(protected)/students'
+import { Route as protectedDashboardRouteImport } from './routes/(protected)/dashboard'
+import { Route as authLoginRouteImport } from './routes/(auth)/login'
 
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const protectedRouteRoute = protectedRouteRouteImport.update({
+  id: '/(protected)',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -28,51 +24,69 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const protectedStudentsRoute = protectedStudentsRouteImport.update({
+  id: '/students',
+  path: '/students',
+  getParentRoute: () => protectedRouteRoute,
+} as any)
+const protectedDashboardRoute = protectedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => protectedRouteRoute,
+} as any)
+const authLoginRoute = authLoginRouteImport.update({
+  id: '/(auth)/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
+  '/login': typeof authLoginRoute
+  '/dashboard': typeof protectedDashboardRoute
+  '/students': typeof protectedStudentsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
+  '/login': typeof authLoginRoute
+  '/dashboard': typeof protectedDashboardRoute
+  '/students': typeof protectedStudentsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
+  '/(protected)': typeof protectedRouteRouteWithChildren
+  '/(auth)/login': typeof authLoginRoute
+  '/(protected)/dashboard': typeof protectedDashboardRoute
+  '/(protected)/students': typeof protectedStudentsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/login'
+  fullPaths: '/' | '/login' | '/dashboard' | '/students'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/login'
-  id: '__root__' | '/' | '/dashboard' | '/login'
+  to: '/' | '/login' | '/dashboard' | '/students'
+  id:
+    | '__root__'
+    | '/'
+    | '/(protected)'
+    | '/(auth)/login'
+    | '/(protected)/dashboard'
+    | '/(protected)/students'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DashboardRoute: typeof DashboardRoute
-  LoginRoute: typeof LoginRoute
+  protectedRouteRoute: typeof protectedRouteRouteWithChildren
+  authLoginRoute: typeof authLoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
+    '/(protected)': {
+      id: '/(protected)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof protectedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -82,13 +96,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(protected)/students': {
+      id: '/(protected)/students'
+      path: '/students'
+      fullPath: '/students'
+      preLoaderRoute: typeof protectedStudentsRouteImport
+      parentRoute: typeof protectedRouteRoute
+    }
+    '/(protected)/dashboard': {
+      id: '/(protected)/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof protectedDashboardRouteImport
+      parentRoute: typeof protectedRouteRoute
+    }
+    '/(auth)/login': {
+      id: '/(auth)/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof authLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface protectedRouteRouteChildren {
+  protectedDashboardRoute: typeof protectedDashboardRoute
+  protectedStudentsRoute: typeof protectedStudentsRoute
+}
+
+const protectedRouteRouteChildren: protectedRouteRouteChildren = {
+  protectedDashboardRoute: protectedDashboardRoute,
+  protectedStudentsRoute: protectedStudentsRoute,
+}
+
+const protectedRouteRouteWithChildren = protectedRouteRoute._addFileChildren(
+  protectedRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DashboardRoute: DashboardRoute,
-  LoginRoute: LoginRoute,
+  protectedRouteRoute: protectedRouteRouteWithChildren,
+  authLoginRoute: authLoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

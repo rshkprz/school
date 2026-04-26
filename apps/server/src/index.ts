@@ -1,8 +1,9 @@
-import { auth } from "@school/auth";
 import { env } from "@school/env/server";
-import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
 import express from "express";
+import apiRoutes from "./routes";
+import { errorHandler } from "./error/error-handler";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -15,14 +16,12 @@ app.use(
   }),
 );
 
-app.all("/api/auth{/*path}", toNodeHandler(auth));
-
 app.use(express.json());
+app.use(cookieParser());
+app.use("/api", apiRoutes)
 
-app.get("/", (_req, res) => {
-  res.status(200).send("OK");
-});
+app.use(errorHandler)
 
-app.listen(3000, () => {
-  console.log("Server is running on http://localhost:3000");
+app.listen(8000, () => {
+  console.log("Server is running on http://localhost:8000");
 });

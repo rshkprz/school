@@ -10,19 +10,24 @@
     "start": "node dist/index.mjs"
   },
   "dependencies": {
-    "@school/auth": "workspace:*",
     "@school/db": "workspace:*",
     "@school/env": "workspace:*",
-    "better-auth": "catalog:",
+    "@school/validators": "workspace:*",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "catalog:",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.3",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@school/config": "workspace:*",
+    "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "catalog:",
     "tsdown": "^0.21.9",
     "tsx": "^4.19.2",
