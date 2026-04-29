@@ -20,14 +20,11 @@ import {
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { ModeToggle } from "../mode-toggle";
-import { Link } from "@tanstack/react-router";
+import { Link, redirect } from "@tanstack/react-router";
+import { useAuth } from "@/context/auth-provider";
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
+  
   navMain: [
     {
       title: "Dashboard",
@@ -70,6 +67,9 @@ const data = {
 export default function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const {user, loading} = useAuth()
+  if (loading) return null
+  
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -87,7 +87,7 @@ export default function AppSidebar({
         <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {user && <NavUser user={user} />}
       </SidebarFooter>
     </Sidebar>
   );

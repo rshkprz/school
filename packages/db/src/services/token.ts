@@ -8,9 +8,9 @@ export const insertHashedRefreshToken = async (
   jti: string,
 ) => {
   await db.insert(refreshTokens).values({
-    jti: jti,
-    userId: userId,
     tokenHash: refreshToken,
+    userId: userId,
+    jti: jti,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   });
 };

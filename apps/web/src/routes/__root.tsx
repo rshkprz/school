@@ -2,6 +2,7 @@ import { Toaster } from "@school/ui/components/sonner";
 import {
   Outlet,
   createRootRouteWithContext,
+  redirect,
 } from "@tanstack/react-router";
 import {
   TanStackRouterDevtools,
@@ -9,11 +10,21 @@ import {
 import { ThemeProvider } from "@/components/theme-provider";
 
 import "../index.css";
+import { getMe } from "@/api/auth";
+import { QueryClient } from "@tanstack/react-query";
+import { api } from "@/api/api";
+import { AuthContextType } from "@/context/auth-provider";
+// import { useAuth } from "@/hooks/use-auth";
 
-export interface RouterAppContext {}
+
+export interface RouterAppContext {
+  // queryClient: QueryClient
+  // auth: AuthContextType
+}
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
   component: RootComponent,
+  
   head: () => ({
     meta: [
       {
@@ -34,6 +45,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 });
 
 function RootComponent() {
+  
   return (
     <>
       <ThemeProvider
@@ -44,7 +56,7 @@ function RootComponent() {
       >
         <Outlet />
         <Toaster richColors />
-        <TanStackRouterDevtools position="bottom-left" />
+        <TanStackRouterDevtools position="bottom-right" />
       </ThemeProvider>
     </>
   );

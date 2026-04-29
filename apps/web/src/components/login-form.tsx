@@ -3,7 +3,6 @@ import { Button } from "@school/ui/components/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@school/ui/components/card";
@@ -15,12 +14,13 @@ import {
 } from "@school/ui/components/field";
 import { Input } from "@school/ui/components/input";
 
-import { authClient } from "@/lib/auth-client";
 import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import z from "zod";
-
+import { login } from "@/api/auth";
+import { useAuth } from "@/context/auth-provider";
+import { router } from "@/main";
 
 export function LoginForm({
   className,
@@ -29,7 +29,8 @@ export function LoginForm({
   const navigate = useNavigate({
     from: "/",
   });
-  // const { isPending } = authClient.useSession();
+
+  const { setAuth } = useAuth();
 
   const form = useForm({
     defaultValues: {
@@ -37,23 +38,18 @@ export function LoginForm({
       password: "",
     },
     onSubmit: async ({ value }) => {
-      await authClient.signIn.email(
-        {
+      try {
+        const res = await login({
           email: value.email,
           password: value.password,
-        },
-        {
-          onSuccess: () => {
-            navigate({
-              to: "/dashboard",
-            });
-            toast.success("Sign in successful");
-          },
-          onError: (error) => {
-            toast.error(error.error.message || error.error.statusText);
-          },
-        },
-      );
+        });
+        setAuth(res);
+        await router.invalidate();
+        navigate({ to: "/dashboard" });
+        toast.success("Sign in successful");
+      } catch (error: any) {
+        toast.error(error?.response?.data?.message || "Login failed");
+      }
     },
     validators: {
       onSubmit: z.object({
@@ -63,11 +59,8 @@ export function LoginForm({
     },
   });
 
-  
-
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome</CardTitle>

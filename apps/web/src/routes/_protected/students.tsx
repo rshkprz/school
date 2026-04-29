@@ -4,7 +4,7 @@ import { Button } from '@school/ui/components/button';
 import { AddStudentDialog } from '@/components/students/add-student-dialog';
 import { DataTable } from '@/components/students/student-data-table';
 import { columns } from '@/components/students/columns';
-export const Route = createFileRoute('/(protected)/students')({
+export const Route = createFileRoute('/_protected/students')({
   component: RouteComponent,
 })
 

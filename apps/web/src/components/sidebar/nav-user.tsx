@@ -34,30 +34,40 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@school/ui/components/avatar";
-import { authClient } from "@/lib/auth-client";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
+import { User } from "@/types/user";
+import { logout } from "@/api/auth";
+import { useAuth } from "@/context/auth-provider";
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
-}) {
+// const mutation = useMutation({
+//   mutationFn: logout,
+//   onSuccess: () => {
+//     navigate({ to: "/" });
+//     toast.success("Logged out successfully");
+//   },
+//   onError: (error: any) => {
+//     toast.error(error?.response?.data?.message || "Logout failed");
+//   },
+// });
+// mutation.mutate();
+export function NavUser({ user }: { user: User|null }) {
+  if (!user) return null
   const navigate = useNavigate();
   const { isMobile } = useSidebar();
+  
+
+  const { clear } = useAuth();
   const handleLogout = async () => {
-    toast.success("Logged out successfully")
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          navigate({ to: "/login" });
-        },
-      },
-    });
+    try {
+      const res = await logout();
+      clear();
+      navigate({ to: "/login", replace: true });
+      toast.success("logged out successfully");
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "logout failed");
+    }
   };
   return (
     <SidebarMenu>
@@ -71,10 +81,10 @@ export function NavUser({
               />
             }
           >
-            <Avatar>
-              <AvatarImage src={user.avatar} alt={user.name} />
+            {/* <Avatar>
+              <AvatarImage src={user.avatar?? ""} alt={user.name} />
               <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-            </Avatar>
+            </Avatar> */}
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">{user.name}</span>
               <span className="truncate text-xs">{user.email}</span>
@@ -87,7 +97,7 @@ export function NavUser({
                 <Item size="xs">
                   <ItemMedia>
                     <Avatar>
-                      <AvatarImage src={user.avatar} alt={user.name} />
+                      {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                   </ItemMedia>

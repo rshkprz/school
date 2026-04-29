@@ -1,8 +1,8 @@
 import { env } from "@school/env/server";
 import jwt from "jsonwebtoken";
 
-export function signAccessToken(userId: string) {
-  return jwt.sign({ userId }, env.ACCESS_TOKEN_SECRET!, {
+export function signAccessToken(userId: string, role: string) {
+  return jwt.sign({ userId, role }, env.ACCESS_TOKEN_SECRET!, {
     expiresIn: "15m",
   });
 }

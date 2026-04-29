@@ -1,6 +1,7 @@
 import {
   loginService,
   logoutService,
+  meService,
   refreshService,
 } from "@/services/auth.service";
 import { asyncHandler } from "@/utils/asynchandler";
@@ -31,9 +32,10 @@ export const refreshController = asyncHandler(
   async (req: Request, res: Response) => {
     const token = req.cookies.refreshToken;
     if (!token)
-      return res.sendStatus(401).json({ message: "Refresh token missing" });
+      return res.status(401).json({ message: "Refresh token missing" });
 
-    const { accessToken, newRefreshToken } = await refreshService(token);
+    const { newAccessToken, newRefreshToken, user } =
+      await refreshService(token);
 
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
@@ -42,7 +44,17 @@ export const refreshController = asyncHandler(
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    return res.status(200).json({ accessToken });
+    return res
+      .status(200)
+      .json({
+        newAccessToken,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
+      });
   },
 );
 
@@ -55,9 +67,28 @@ export const logoutController = asyncHandler(
       secure: env.NODE_ENV === "production" ? true : false,
       sameSite: "lax",
     });
-    if (!token) return res.sendStatus(400);
+    if (!token)
+      return res.status(200).json({
+        message: "Already logged out",
+      });
 
     await logoutService(token);
     return res.status(200).json({ message: "logged out successfully" });
   },
 );
+
+export const meController = async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+  if (!userId) return res.status(401).json({ message: "UserId missing" });
+
+  const user = await meService(userId);
+
+  res.json({
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+    },
+  });
+};

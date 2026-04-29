@@ -1,27 +1,19 @@
 import AppSidebar from "@/components/sidebar/app-sidebar";
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect, useNavigate } from "@tanstack/react-router";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@school/ui/components/sidebar";
-import { authClient } from "@/lib/auth-client";
+import { useAuth } from "@/context/auth-provider";
 
-export const Route = createFileRoute("/(protected)")({
+export const Route = createFileRoute("/_protected")({
   component: ProtectedLayout,
-  // beforeLoad: async () => {
-  //   const session = await authClient.getSession();
-  //   if (!session.data) {
-  //     redirect({
-  //       to: "/login",
-  //       throw: true,
-  //     });
-  //   }
-  //   return { session };
-  // },
-});
+})
 
-function ProtectedLayout() {
+function ProtectedLayout() { 
+  const { user, loading } = useAuth();
+  if (!user && !loading) throw redirect({to: "/login"}) 
  
   return (
     <SidebarProvider

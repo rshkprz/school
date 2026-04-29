@@ -3,11 +3,13 @@ import ReactDOM from "react-dom/client";
 
 import { routeTree } from "./routeTree.gen";
 
-const router = createRouter({
+
+import AuthProvider from "./context/auth-provider";
+
+export const router = createRouter({
   routeTree,
   defaultPreload: "intent",
   scrollRestoration: true,
-  
   context: {},
 });
 
@@ -25,5 +27,9 @@ if (!rootElement) {
 
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
-  root.render(<RouterProvider router={router} />);
+  root.render(
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>,
+  );
 }

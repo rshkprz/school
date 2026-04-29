@@ -1,4 +1,4 @@
-import { findUserByEmail } from "@school/db/services/user";
+import { findUserByEmail, getUserById } from "@school/db/services/user";
 import type { LoginSchemaType } from "@school/validators";
 import bcrypt from "bcrypt";
 import { signAccessToken, signRefreshToken } from "@/utils/jwt";
@@ -26,7 +26,7 @@ export const loginService = async (body: LoginSchemaType) => {
     throw new AppError("Invalid credentials", 401);
   }
   const jti = randomUUID();
-  const accessToken = signAccessToken(user.id);
+  const accessToken = signAccessToken(user.id, user.role);
   const refreshToken = signRefreshToken(user.id, jti);
 
   const refreshTokenHash = await hashToken(refreshToken);
@@ -36,6 +36,8 @@ export const loginService = async (body: LoginSchemaType) => {
     user: {
       id: user.id,
       email: user.email,
+      name: user.name,
+      role: user.role,
     },
     accessToken,
     refreshToken,
@@ -55,15 +57,18 @@ export const refreshService = async (token: string) => {
     await revokeRefreshToken(decoded.jti!);
 
     const newJti = randomUUID();
-    const accessToken = signAccessToken(decoded.userId);
+    const newAccessToken = signAccessToken(decoded.userId, decoded.role);
     const newRefreshToken = signRefreshToken(decoded.userId, newJti);
 
     const newRefreshTokenHash = await hashToken(newRefreshToken);
-    await insertHashedRefreshToken(newRefreshTokenHash, newJti, decoded.userId);
+    await insertHashedRefreshToken(newRefreshTokenHash, decoded.userId, newJti);
 
-    return { accessToken, newRefreshToken };
+    const user = await getUserById(decoded.userId);
+    if (!user) throw new AppError("User not found", 404);
+
+    return { newAccessToken, newRefreshToken, user };
   } catch (error) {
-    throw new AppError("Could not refresh session");
+    throw new AppError("Could not refresh session", 401);
   }
 };
 
@@ -79,5 +84,15 @@ export const logoutService = async (token: string) => {
     await revokeRefreshToken(jti);
   } catch (err) {
     console.error("Logout error or token already invalid", err);
+  }
+};
+
+export const meService = async (userId: string) => {
+  try {
+    const user = await getUserById(userId);
+    if (!user) throw new AppError("User not found", 404);
+    return user;
+  } catch (error) {
+    throw new AppError("Could not retrieve user profile");
   }
 };
