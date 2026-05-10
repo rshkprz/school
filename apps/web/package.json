@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@school/env": "workspace:*",
     "@school/ui": "workspace:*",
+    "@school/validators": "workspace:*",
     "@tabler/icons-react": "^3.41.1",
     "@tailwindcss/vite": "^4.2.2",
     "@tanstack/react-form": "^1.28.0",

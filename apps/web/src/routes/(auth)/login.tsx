@@ -7,6 +7,13 @@ import { GalleryVerticalEnd } from "lucide-react";
 
 
 export const Route = createFileRoute("/(auth)/login")({
+  beforeLoad:({ context }) => {
+    
+    if (context.auth.user) {
+      if(context.auth.user.role === "admin")
+        throw redirect({ to: "/admin/dashboard" })
+    }
+  },
   component: RouteComponent,
 });
 

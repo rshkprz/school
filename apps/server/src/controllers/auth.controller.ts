@@ -1,7 +1,6 @@
 import {
   loginService,
   logoutService,
-  meService,
   refreshService,
 } from "@/services/auth.service";
 import { asyncHandler } from "@/utils/asynchandler";
@@ -34,8 +33,7 @@ export const refreshController = asyncHandler(
     if (!token)
       return res.status(401).json({ message: "Refresh token missing" });
 
-    const { newAccessToken, newRefreshToken, user } =
-      await refreshService(token);
+    const { newAccessToken, newRefreshToken, user } = await refreshService(token);
 
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
@@ -77,18 +75,4 @@ export const logoutController = asyncHandler(
   },
 );
 
-export const meController = async (req: Request, res: Response) => {
-  const userId = req.user?.id;
-  if (!userId) return res.status(401).json({ message: "UserId missing" });
 
-  const user = await meService(userId);
-
-  res.json({
-    user: {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
-    },
-  });
-};

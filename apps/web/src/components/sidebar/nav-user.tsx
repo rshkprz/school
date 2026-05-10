@@ -41,17 +41,7 @@ import { User } from "@/types/user";
 import { logout } from "@/api/auth";
 import { useAuth } from "@/context/auth-provider";
 
-// const mutation = useMutation({
-//   mutationFn: logout,
-//   onSuccess: () => {
-//     navigate({ to: "/" });
-//     toast.success("Logged out successfully");
-//   },
-//   onError: (error: any) => {
-//     toast.error(error?.response?.data?.message || "Logout failed");
-//   },
-// });
-// mutation.mutate();
+
 export function NavUser({ user }: { user: User|null }) {
   if (!user) return null
   const navigate = useNavigate();
@@ -64,7 +54,7 @@ export function NavUser({ user }: { user: User|null }) {
       const res = await logout();
       clear();
       navigate({ to: "/login", replace: true });
-      toast.success("logged out successfully");
+      toast.success("Logged out successfully");
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "logout failed");
     }

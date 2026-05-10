@@ -1,12 +1,12 @@
 import { useAuth } from "@/context/auth-provider";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_protected/dashboard")({
+export const Route = createFileRoute("/_protected/admin/dashboard")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
 
     if (!user) return null;
   return (

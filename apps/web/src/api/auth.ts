@@ -1,9 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
 import { api, setAccessToken } from "./api";
-import { User } from "@/types/user";
-
-
-
 
 export const login = async (data: { email: string; password: string }) => {
   const response = await api.post("/auth/login", data);
@@ -20,7 +15,4 @@ export const refresh = async () => {
   return response.data;
 }
 
-export const getMe = async (): Promise<User> => {
-  const response = await api.get("/auth/me");
-  return response.data;
-};
+

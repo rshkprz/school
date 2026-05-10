@@ -29,7 +29,8 @@ export function LoginForm({
   const navigate = useNavigate({
     from: "/",
   });
-
+  
+  
   const { setAuth } = useAuth();
 
   const form = useForm({
@@ -38,18 +39,16 @@ export function LoginForm({
       password: "",
     },
     onSubmit: async ({ value }) => {
-      try {
-        const res = await login({
-          email: value.email,
-          password: value.password,
-        });
-        setAuth(res);
-        await router.invalidate();
-        navigate({ to: "/dashboard" });
-        toast.success("Sign in successful");
-      } catch (error: any) {
-        toast.error(error?.response?.data?.message || "Login failed");
+      try{
+        const res = await login({email:value.email, password:value.password})
+        setAuth(res)
+        await router.invalidate()
+        navigate({to: "/admin/dashboard"})
+        toast.success("Sign in successful")
+      }catch(error:any){
+        toast.error(error?.response?.data?.message || "Login failed")
       }
+      
     },
     validators: {
       onSubmit: z.object({

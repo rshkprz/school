@@ -32,7 +32,7 @@
     "@school/config": "workspace:*",
     "@types/bcrypt": "^6.0.0",
     "@types/pg": "^8.16.0",
-    "drizzle-kit": "^0.31.10",
+    "drizzle-kit": "^0.30.5",
     "tsx": "^4.21.0",
     "typescript": "catalog:"
   }

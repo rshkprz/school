@@ -1,20 +1,26 @@
 import AppSidebar from "@/components/sidebar/app-sidebar";
-import { createFileRoute, Outlet, redirect, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Outlet,
+  redirect,
+  useNavigate,
+} from "@tanstack/react-router";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@school/ui/components/sidebar";
-import { useAuth } from "@/context/auth-provider";
 
 export const Route = createFileRoute("/_protected")({
   component: ProtectedLayout,
-})
+  beforeLoad: async ({ context }) => {
+    if (!context.auth.isAuthenticated && !context.auth.loading) {
+      throw redirect({ to: "/login" });
+    }
+  },
+});
 
-function ProtectedLayout() { 
-  const { user, loading } = useAuth();
-  if (!user && !loading) throw redirect({to: "/login"}) 
- 
+function ProtectedLayout() {
   return (
     <SidebarProvider
       style={
@@ -24,7 +30,7 @@ function ProtectedLayout() {
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="inset"/>
+      <AppSidebar variant="inset" />
       <SidebarInset className=" p-1.5">
         <SidebarTrigger />
         <Outlet />

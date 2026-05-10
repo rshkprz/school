@@ -87,12 +87,4 @@ export const logoutService = async (token: string) => {
   }
 };
 
-export const meService = async (userId: string) => {
-  try {
-    const user = await getUserById(userId);
-    if (!user) throw new AppError("User not found", 404);
-    return user;
-  } catch (error) {
-    throw new AppError("Could not retrieve user profile");
-  }
-};
+

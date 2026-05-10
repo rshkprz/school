@@ -5,9 +5,11 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 export type AuthContextType = {
   user: User | null;
-  loading: boolean;
+  isAuthenticated: boolean;
   setAuth: (data: { user: User; accessToken: string }) => void;
   clear: () => void;
+  loading: boolean;
+  hasRole: (role: string) => boolean
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -19,14 +21,21 @@ export default function AuthProvider({
 }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setloading] = useState<boolean>(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
+
+  const hasRole = (role: string) => {
+    return user?.role ===role ? true: false
+  }
 
   const setAuth = (data: { user: User; accessToken: string }) => {
     setUser(data.user);
+    setIsAuthenticated(true)
     setAccessToken(data.accessToken);
   };
 
   const clear = () => {
     setUser(null);
+    setIsAuthenticated(false)
     clearAccessToken()
   };
 
@@ -55,9 +64,17 @@ export default function AuthProvider({
     init();
   }, []);
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+       ...
+      </div>
+    )
+  }
+
   return (
     <AuthContext.Provider
-      value={{ user, loading, setAuth, clear }}
+      value={{ user, isAuthenticated, setAuth, clear, loading, hasRole }}
     >
       {children}
     </AuthContext.Provider>

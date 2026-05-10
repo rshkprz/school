@@ -9,7 +9,7 @@ export type Student = {
   roll: string|number;
 };
 
-export const columns: ColumnDef<Student>[] = [
+export const StudentColumns: ColumnDef<Student>[] = [
   {
     accessorKey: "id",
     header: "Id",

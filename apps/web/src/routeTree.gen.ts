@@ -9,12 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ProtectedStudentsRouteImport } from './routes/_protected/students'
-import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
+import { Route as ProtectedAdminRouteRouteImport } from './routes/_protected/admin/route'
+import { Route as ProtectedAdminStudentsRouteImport } from './routes/_protected/admin/students'
+import { Route as ProtectedAdminSettingsRouteImport } from './routes/_protected/admin/settings'
+import { Route as ProtectedAdminDashboardRouteImport } from './routes/_protected/admin/dashboard'
 
+const UnauthorizedRoute = UnauthorizedRouteImport.update({
+  id: '/unauthorized',
+  path: '/unauthorized',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
   id: '/_protected',
   getParentRoute: () => rootRouteImport,
@@ -24,64 +32,108 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProtectedStudentsRoute = ProtectedStudentsRouteImport.update({
-  id: '/students',
-  path: '/students',
-  getParentRoute: () => ProtectedRouteRoute,
-} as any)
-const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => ProtectedRouteRoute,
-} as any)
 const authLoginRoute = authLoginRouteImport.update({
   id: '/(auth)/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProtectedAdminRouteRoute = ProtectedAdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedAdminStudentsRoute = ProtectedAdminStudentsRouteImport.update({
+  id: '/students',
+  path: '/students',
+  getParentRoute: () => ProtectedAdminRouteRoute,
+} as any)
+const ProtectedAdminSettingsRoute = ProtectedAdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => ProtectedAdminRouteRoute,
+} as any)
+const ProtectedAdminDashboardRoute = ProtectedAdminDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => ProtectedAdminRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/unauthorized': typeof UnauthorizedRoute
+  '/admin': typeof ProtectedAdminRouteRouteWithChildren
   '/login': typeof authLoginRoute
-  '/dashboard': typeof ProtectedDashboardRoute
-  '/students': typeof ProtectedStudentsRoute
+  '/admin/dashboard': typeof ProtectedAdminDashboardRoute
+  '/admin/settings': typeof ProtectedAdminSettingsRoute
+  '/admin/students': typeof ProtectedAdminStudentsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/unauthorized': typeof UnauthorizedRoute
+  '/admin': typeof ProtectedAdminRouteRouteWithChildren
   '/login': typeof authLoginRoute
-  '/dashboard': typeof ProtectedDashboardRoute
-  '/students': typeof ProtectedStudentsRoute
+  '/admin/dashboard': typeof ProtectedAdminDashboardRoute
+  '/admin/settings': typeof ProtectedAdminSettingsRoute
+  '/admin/students': typeof ProtectedAdminStudentsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_protected': typeof ProtectedRouteRouteWithChildren
+  '/unauthorized': typeof UnauthorizedRoute
+  '/_protected/admin': typeof ProtectedAdminRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
-  '/_protected/dashboard': typeof ProtectedDashboardRoute
-  '/_protected/students': typeof ProtectedStudentsRoute
+  '/_protected/admin/dashboard': typeof ProtectedAdminDashboardRoute
+  '/_protected/admin/settings': typeof ProtectedAdminSettingsRoute
+  '/_protected/admin/students': typeof ProtectedAdminStudentsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/dashboard' | '/students'
+  fullPaths:
+    | '/'
+    | '/unauthorized'
+    | '/admin'
+    | '/login'
+    | '/admin/dashboard'
+    | '/admin/settings'
+    | '/admin/students'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/dashboard' | '/students'
+  to:
+    | '/'
+    | '/unauthorized'
+    | '/admin'
+    | '/login'
+    | '/admin/dashboard'
+    | '/admin/settings'
+    | '/admin/students'
   id:
     | '__root__'
     | '/'
     | '/_protected'
+    | '/unauthorized'
+    | '/_protected/admin'
     | '/(auth)/login'
-    | '/_protected/dashboard'
-    | '/_protected/students'
+    | '/_protected/admin/dashboard'
+    | '/_protected/admin/settings'
+    | '/_protected/admin/students'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProtectedRouteRoute: typeof ProtectedRouteRouteWithChildren
+  UnauthorizedRoute: typeof UnauthorizedRoute
   authLoginRoute: typeof authLoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unauthorized': {
+      id: '/unauthorized'
+      path: '/unauthorized'
+      fullPath: '/unauthorized'
+      preLoaderRoute: typeof UnauthorizedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_protected': {
       id: '/_protected'
       path: ''
@@ -96,20 +148,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_protected/students': {
-      id: '/_protected/students'
-      path: '/students'
-      fullPath: '/students'
-      preLoaderRoute: typeof ProtectedStudentsRouteImport
-      parentRoute: typeof ProtectedRouteRoute
-    }
-    '/_protected/dashboard': {
-      id: '/_protected/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof ProtectedDashboardRouteImport
-      parentRoute: typeof ProtectedRouteRoute
-    }
     '/(auth)/login': {
       id: '/(auth)/login'
       path: '/login'
@@ -117,17 +155,58 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_protected/admin': {
+      id: '/_protected/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof ProtectedAdminRouteRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/admin/students': {
+      id: '/_protected/admin/students'
+      path: '/students'
+      fullPath: '/admin/students'
+      preLoaderRoute: typeof ProtectedAdminStudentsRouteImport
+      parentRoute: typeof ProtectedAdminRouteRoute
+    }
+    '/_protected/admin/settings': {
+      id: '/_protected/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof ProtectedAdminSettingsRouteImport
+      parentRoute: typeof ProtectedAdminRouteRoute
+    }
+    '/_protected/admin/dashboard': {
+      id: '/_protected/admin/dashboard'
+      path: '/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof ProtectedAdminDashboardRouteImport
+      parentRoute: typeof ProtectedAdminRouteRoute
+    }
   }
 }
 
+interface ProtectedAdminRouteRouteChildren {
+  ProtectedAdminDashboardRoute: typeof ProtectedAdminDashboardRoute
+  ProtectedAdminSettingsRoute: typeof ProtectedAdminSettingsRoute
+  ProtectedAdminStudentsRoute: typeof ProtectedAdminStudentsRoute
+}
+
+const ProtectedAdminRouteRouteChildren: ProtectedAdminRouteRouteChildren = {
+  ProtectedAdminDashboardRoute: ProtectedAdminDashboardRoute,
+  ProtectedAdminSettingsRoute: ProtectedAdminSettingsRoute,
+  ProtectedAdminStudentsRoute: ProtectedAdminStudentsRoute,
+}
+
+const ProtectedAdminRouteRouteWithChildren =
+  ProtectedAdminRouteRoute._addFileChildren(ProtectedAdminRouteRouteChildren)
+
 interface ProtectedRouteRouteChildren {
-  ProtectedDashboardRoute: typeof ProtectedDashboardRoute
-  ProtectedStudentsRoute: typeof ProtectedStudentsRoute
+  ProtectedAdminRouteRoute: typeof ProtectedAdminRouteRouteWithChildren
 }
 
 const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
-  ProtectedDashboardRoute: ProtectedDashboardRoute,
-  ProtectedStudentsRoute: ProtectedStudentsRoute,
+  ProtectedAdminRouteRoute: ProtectedAdminRouteRouteWithChildren,
 }
 
 const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
@@ -137,6 +216,7 @@ const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProtectedRouteRoute: ProtectedRouteRouteWithChildren,
+  UnauthorizedRoute: UnauthorizedRoute,
   authLoginRoute: authLoginRoute,
 }
 export const routeTree = rootRouteImport

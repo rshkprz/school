@@ -6,8 +6,6 @@ import {
   boolean,
   index,
   pgEnum,
-  varchar,
-  date,
   uuid,
 } from "drizzle-orm/pg-core";
 
@@ -29,9 +27,6 @@ export const user = pgTable(
     passwordHash: text("password_hash").notNull(),
     image: text("image"),
     role: userRoleEnum("role").notNull(),
-    phone: varchar("phone", { length: 20 }),
-    address: text("address"),
-    dateOfBirth: date("date_of_birth"),
     isActive: boolean("is_active").default(true),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")

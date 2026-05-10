@@ -20,7 +20,7 @@ import z from "zod";
 const AddStudentSchema = z.object({
   admissionNumber: z.string().min(1),
   fullName: z.string().min(1),
-  dateOfBirth: z.string(),
+  dateOfBirth: z.date(),
   address: z.string().min(1),
   bloodGroup: z.string(),
   guardianName: z.string(),
@@ -31,7 +31,7 @@ export function AddStudentDialog() {
     defaultValues: {
       admissionNumber: "",
       fullName: "",
-      dateOfBirth: "",
+      dateOfBirth: new Date(),
       address: "",
       bloodGroup: "",
       guardianName: "",
@@ -100,12 +100,18 @@ export function AddStudentDialog() {
                 <Field>
                   <FieldLabel htmlFor="fullname">Date of Birth</FieldLabel>
                   <Input
-                    type="text"
+                    type="date"
                     id={field.name}
                     name={field.name}
-                    value={field.state.value}
+                    value={
+                      field.state.value instanceof Date
+                        ? field.state.value.toISOString().split("T")[0]
+                        : ""
+                    }
                     onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
+                    onChange={(e) =>
+                      field.handleChange(new Date(e.target.value))
+                    }
                   />
                 </Field>
               )}

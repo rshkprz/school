@@ -5,12 +5,13 @@ import { routeTree } from "./routeTree.gen";
 
 
 import AuthProvider from "./context/auth-provider";
+import App from "./app";
 
 export const router = createRouter({
   routeTree,
   defaultPreload: "intent",
   scrollRestoration: true,
-  context: {},
+  context: {auth:undefined!},
 });
 
 declare module "@tanstack/react-router" {
@@ -28,8 +29,6 @@ if (!rootElement) {
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>,
+    <App />
   );
 }

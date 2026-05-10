@@ -19,7 +19,7 @@ import { AuthContextType } from "@/context/auth-provider";
 
 export interface RouterAppContext {
   // queryClient: QueryClient
-  // auth: AuthContextType
+  auth: AuthContextType
 }
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({

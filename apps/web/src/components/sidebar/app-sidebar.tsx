@@ -28,37 +28,37 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/dashboard",
+      url: "/admin/dashboard",
       icon: IconDashboard,
     },
     {
       title: "Students",
-      url: "/students",
+      url: "/admin/students",
       icon: IconListDetails,
     },
     {
       title: "Teachers",
-      url: "/teachers",
+      url: "/admin/teachers",
       icon: IconChartBar,
     },
     {
       title: "Staff",
-      url: "/staff",
+      url: "/admin/staff",
       icon: IconFolder,
     },
     {
       title: "Exam",
-      url: "/exam",
+      url: "/admin/exam",
       icon: IconUsers,
     },
     {
       title: "Fees",
-      url: "/fees",
+      url: "/admin/fees",
       icon: IconMoneybag,
     },
     {
       title: "Settings",
-      url: "/settings",
+      url: "/admin/settings",
       icon: IconSettings,
     },
   ],
@@ -74,7 +74,7 @@ export default function AppSidebar({
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
         <div className="flex justify-between">
-          <Link to="/dashboard" className="flex items-center justify-center gap-2 px-1">
+          <Link to="/admin/dashboard" className="flex items-center justify-center gap-2 px-1">
             <IconInnerShadowTop className="size-5!" />
             <span className="text-base font-semibold">Acme Inc.</span>
           </Link>
